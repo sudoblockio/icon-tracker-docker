@@ -1,0 +1,146 @@
+version: "3.7"
+
+x-extractor-env: &extractor-env
+  # API
+  API_PORT: "8080"
+
+  # Logging
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "console"
+
+  # Icon node service
+  ICON_NODE_SERVICE_URL: "http://66.42.108.184:9001/api/v3" # Sejong testnet
+  ICON_NODE_SERVICE_MAX_BATCH_SIZE: "100"
+
+  # Kafka
+  KAFKA_BROKER_URL: "kafka:9092"
+  KAFKA_BLOCKS_TOPIC: "icon-sejong-blocks-v2"
+  KAFKA_PRODUCER_PARTITIONS: "12"
+  KAFKA_DEAD_MESSAGE_TOPIC: "icon-sejong-blocks-v2-dead"
+
+  # Postgres
+  DB_DRIVER: "postgres"
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_USER: "postgres"
+  DB_PASSWORD: "changeme"
+  DB_DBNAME: "postgres"
+  DB_SSL_MODE: "disable"
+  DB_TIMEZONE: "UTC"
+
+x-transformer-env: &transformer-env
+  # Logging
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "console"
+
+  # Icon node service
+  ICON_NODE_SERVICE_URL: "http://66.42.108.184:9001/api/v3" # Sejong testnet
+
+  # Kakfa
+  KAFKA_BROKER_URL: "kafka:9092"
+  KAFKA_BLOCKS_TOPIC: "icon-sejong-blocks-v2"
+
+  # Consumer group
+  CONSUMER_GROUP: "icon-sejong-v2"
+
+  # DB
+  DB_DRIVER: "postgres"
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_USER: "postgres"
+  DB_PASSWORD: "changeme"
+  DB_DBNAME: "postgres"
+  DB_SSL_MODE: "disable"
+  DB_TIMEZONE: "UTC"
+
+  # Redis
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ""
+  REDIS_KEY_PREFIX: "icon_sejong_v2_"
+  REDIS_BLOCKS_CHANNEL: "icon_sejong_v2_blocks"
+  REDIS_TRANSACTIONS_CHANNEL: "icon_sejong_v2_transactions"
+  REDIS_LOGS_CHANNEL: "icon_sejong_v2_logs"
+  REDIS_TOKEN_TRANSFERS_CHANNEL: "icon_sejong_v2_token_transfers"
+
+x-api-env: &api-env
+  # Ports
+  API_PORT: "8000"
+
+  # Logging
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "console"
+
+  # CORS
+  CORS_ALLOW_ORIGINS: "*"
+  CORS_ALLOW_HEADERS: "*"
+  CORS_ALLOW_METHODS: "GET,POST,HEAD,PUT,DELETE,PATCH"
+  CORS_EXPOSE_HEADERS: "*"
+
+  # DB
+  DB_DRIVER: "postgres"
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_USER: "postgres"
+  DB_PASSWORD: "changeme"
+  DB_DBNAME: "postgres"
+  DB_SSL_MODE: "disable"
+  DB_TIMEZONE: "UTC"
+
+  # Redis
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ""
+  REDIS_KEY_PREFIX: "icon_sejong_v2_"
+  REDIS_BLOCKS_CHANNEL: "icon_sejong_v2_blocks"
+  REDIS_TRANSACTIONS_CHANNEL: "icon_sejong_v2_transactions"
+  REDIS_LOGS_CHANNEL: "icon_sejong_v2_logs"
+  REDIS_TOKEN_TRANSFERS_CHANNEL: "icon_sejong_v2_token_transfers"
+
+services:
+  claim-extractor:
+    image: sudoblock/icon-extractor:latest
+    deploy:
+      replicas: 8
+    environment:
+      <<: *extractor-env
+      START_CLAIM_EXTRACTORS: "true"
+      NUM_CLAIM_EXTRACTORS: "4"
+      MAX_CLAIM_SIZE: "1000"
+      START_HEAD_EXTRACTOR: "false"
+      INSERT_EXTRACTOR_JOB: "true"
+      INSERT_EXTRACTOR_JOB_START_BLOCK_NUMBER: "1"
+      INSERT_EXTRACTOR_JOB_END_BLOCK_NUMBER: "6000000"
+      INSERT_EXTRACTOR_JOB_HASH: "SEJONG_FIREHOSE_1"
+
+  head-extractor:
+    image: sudoblock/icon-extractor:latest
+    deploy:
+      replicas: 1 # NOTE never run more than 1 head extractor
+    environment:
+      <<: *extractor-env
+      START_CLAIM_EXTRACTORS: "false"
+      START_HEAD_EXTRACTOR: "true"
+      HEAD_EXTRACTOR_START_BLOCK: "6000000"
+      INSERT_EXTRACTOR_JOB: "false"
+
+
+  transformer:
+    image: sudoblock/icon-transformer:latest
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-routine:
+    image: sudoblock/icon-transformer:latest
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "true"
+      ROUTINES_SLEEP_DURATION: "1h"
+
+  api:
+    image: sudoblock/icon-go-api:latest
+    ports:
+      - "8000:8000"
+    environment:
+      <<: *api-env
