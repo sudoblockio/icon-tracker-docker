@@ -9,22 +9,22 @@ x-extractor-env: &extractor-env
   LOG_FORMAT: "console"
 
   # Icon node service
-  ICON_NODE_SERVICE_URL: "http://66.42.108.184:9001/api/v3" # Sejong testnet
+  ICON_NODE_SERVICE_URL: "http://66.42.108.184:9000/api/v3" # Mainnet
   ICON_NODE_SERVICE_MAX_BATCH_SIZE: "100"
 
   # Kafka
   KAFKA_BROKER_URL: "kafka:9092"
-  KAFKA_BLOCKS_TOPIC: "icon-sejong-blocks-v2"
+  KAFKA_BLOCKS_TOPIC: "icon-mainnet-blocks-v2"
   KAFKA_PRODUCER_PARTITIONS: "12"
-  KAFKA_DEAD_MESSAGE_TOPIC: "icon-sejong-blocks-v2-dead"
+  KAFKA_DEAD_MESSAGE_TOPIC: "icon-mainnet-blocks-v2-dead"
 
   # Postgres
   DB_DRIVER: "postgres"
   DB_HOST: "postgres"
   DB_PORT: "5432"
-  DB_USER: "postgres"
-  DB_PASSWORD: "changeme"
-  DB_DBNAME: "postgres"
+  DB_USER: "icon-worker"
+  DB_PASSWORD: "testing1."
+  DB_DBNAME: "mainnet_extractor_v2"
   DB_SSL_MODE: "disable"
   DB_TIMEZONE: "UTC"
 
@@ -34,22 +34,22 @@ x-transformer-env: &transformer-env
   LOG_FORMAT: "console"
 
   # Icon node service
-  ICON_NODE_SERVICE_URL: "http://66.42.108.184:9001/api/v3" # Sejong testnet
+  ICON_NODE_SERVICE_URL: "https://ctz.solidwallet.io/api/v3" # Mainnet
 
   # Kakfa
   KAFKA_BROKER_URL: "kafka:9092"
-  KAFKA_BLOCKS_TOPIC: "icon-sejong-blocks-v2"
+  KAFKA_BLOCKS_TOPIC: "icon-mainnet-blocks-v2"
 
   # Consumer group
-  CONSUMER_GROUP: "icon-sejong-v2"
+  CONSUMER_GROUP: "icon-mainnet-v2"
 
   # DB
   DB_DRIVER: "postgres"
   DB_HOST: "postgres"
   DB_PORT: "5432"
-  DB_USER: "postgres"
-  DB_PASSWORD: "changeme"
-  DB_DBNAME: "postgres"
+  DB_USER: "icon-worker"
+  DB_PASSWORD: "testing1."
+  DB_DBNAME: "mainnet_transformer_v2"
   DB_SSL_MODE: "disable"
   DB_TIMEZONE: "UTC"
 
@@ -57,11 +57,11 @@ x-transformer-env: &transformer-env
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"
   REDIS_PASSWORD: ""
-  REDIS_KEY_PREFIX: "icon_sejong_v2_"
-  REDIS_BLOCKS_CHANNEL: "icon_sejong_v2_blocks"
-  REDIS_TRANSACTIONS_CHANNEL: "icon_sejong_v2_transactions"
-  REDIS_LOGS_CHANNEL: "icon_sejong_v2_logs"
-  REDIS_TOKEN_TRANSFERS_CHANNEL: "icon_sejong_v2_token_transfers"
+  REDIS_KEY_PREFIX: "icon_mainnet_v2_"
+  REDIS_BLOCKS_CHANNEL: "icon_mainnet_v2_blocks"
+  REDIS_TRANSACTIONS_CHANNEL: "icon_mainnet_v2_transactions"
+  REDIS_LOGS_CHANNEL: "icon_mainnet_v2_logs"
+  REDIS_TOKEN_TRANSFERS_CHANNEL: "icon_mainnet_v2_token_transfers"
 
 x-api-env: &api-env
   # Ports
@@ -81,9 +81,9 @@ x-api-env: &api-env
   DB_DRIVER: "postgres"
   DB_HOST: "postgres"
   DB_PORT: "5432"
-  DB_USER: "postgres"
-  DB_PASSWORD: "changeme"
-  DB_DBNAME: "postgres"
+  DB_USER: "icon-api"
+  DB_PASSWORD: "testing1."
+  DB_DBNAME: "mainnet_transformer_v2"
   DB_SSL_MODE: "disable"
   DB_TIMEZONE: "UTC"
 
@@ -91,15 +91,17 @@ x-api-env: &api-env
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"
   REDIS_PASSWORD: ""
-  REDIS_KEY_PREFIX: "icon_sejong_v2_"
-  REDIS_BLOCKS_CHANNEL: "icon_sejong_v2_blocks"
-  REDIS_TRANSACTIONS_CHANNEL: "icon_sejong_v2_transactions"
-  REDIS_LOGS_CHANNEL: "icon_sejong_v2_logs"
-  REDIS_TOKEN_TRANSFERS_CHANNEL: "icon_sejong_v2_token_transfers"
+  REDIS_KEY_PREFIX: "icon_mainnet_v2_"
+  REDIS_BLOCKS_CHANNEL: "icon_mainnet_v2_blocks"
+  REDIS_TRANSACTIONS_CHANNEL: "icon_mainnet_v2_transactions"
+  REDIS_LOGS_CHANNEL: "icon_mainnet_v2_logs"
+  REDIS_TOKEN_TRANSFERS_CHANNEL: "icon_mainnet_v2_token_transfers"
 
 services:
   claim-extractor:
     image: sudoblock/icon-extractor:latest
+    ports:
+      - "8080:8080"
     deploy:
       replicas: 8
     environment:

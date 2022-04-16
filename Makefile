@@ -9,8 +9,11 @@ down-deps:  ## Take down the Dependencies
 pull:
 	docker-compose -f docker-compose.deps.yml -f docker-compose.yml pull
 
-up:  ## Bring everything up as containers
-	docker-compose -f docker-compose.deps.yml -f docker-compose.yml up -d
+up-mainnet:  ## Bring up mainnet
+	docker-compose -f docker-compose.deps.yml -f docker-compose.mainnet.yml up -d
+
+up-sejong:  ## Bring up sejong
+	docker-compose -f docker-compose.deps.yml -f docker-compose.sejong.yml up -d
 
 down:  ## Take down all the containers
 	docker-compose -f docker-compose.deps.yml -f docker-compose.yml down -v
