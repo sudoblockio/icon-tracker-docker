@@ -107,7 +107,7 @@ services:
     environment:
       <<: *extractor-env
       START_CLAIM_EXTRACTORS: "true"
-      NUM_CLAIM_EXTRACTORS: "4"
+      NUM_CLAIM_EXTRACTORS: "16"
       MAX_CLAIM_SIZE: "1000"
       START_HEAD_EXTRACTOR: "false"
       INSERT_EXTRACTOR_JOB: "true"
@@ -126,8 +126,25 @@ services:
       HEAD_EXTRACTOR_START_BLOCK: "6000000"
       INSERT_EXTRACTOR_JOB: "false"
 
+  transformer-0:
+    image: sudoblock/icon-transformer:latest
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
 
-  transformer:
+  transformer-1:
+    image: sudoblock/icon-transformer:latest
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-2:
+    image: sudoblock/icon-transformer:latest
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-3:
     image: sudoblock/icon-transformer:latest
     environment:
       <<: *transformer-env

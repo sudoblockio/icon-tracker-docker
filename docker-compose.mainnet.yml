@@ -9,8 +9,7 @@ x-extractor-env: &extractor-env
   LOG_FORMAT: "console"
 
   # Icon node service
-  ICON_NODE_SERVICE_URL: "http://66.42.108.184:9000/api/v3" # Mainnet
-  ICON_NODE_SERVICE_MAX_BATCH_SIZE: "100"
+  ICON_NODE_SERVICE_URL: "https://api.icon.geometry.io/api/v3" # Mainnet
 
   # Kafka
   KAFKA_BROKER_URL: "kafka:9092"
@@ -107,13 +106,14 @@ services:
     environment:
       <<: *extractor-env
       START_CLAIM_EXTRACTORS: "true"
-      NUM_CLAIM_EXTRACTORS: "4"
+      NUM_CLAIM_EXTRACTORS: "16"
       MAX_CLAIM_SIZE: "1000"
       START_HEAD_EXTRACTOR: "false"
       INSERT_EXTRACTOR_JOB: "true"
       INSERT_EXTRACTOR_JOB_START_BLOCK_NUMBER: "1"
       INSERT_EXTRACTOR_JOB_END_BLOCK_NUMBER: "45000000"
-      INSERT_EXTRACTOR_JOB_HASH: "SEJONG_FIREHOSE_1"
+      INSERT_EXTRACTOR_JOB_HASH: "MAINNET_FIREHOSE_1"
+      ICON_NODE_SERVICE_MAX_BATCH_SIZE: "100"
 
   head-extractor:
     image: sudoblock/icon-extractor:latest
@@ -125,9 +125,28 @@ services:
       START_HEAD_EXTRACTOR: "true"
       HEAD_EXTRACTOR_START_BLOCK: "45000000"
       INSERT_EXTRACTOR_JOB: "false"
+      ICON_NODE_SERVICE_MAX_BATCH_SIZE: "1"
 
 
-  transformer:
+  transformer-0:
+    image: sudoblock/icon-transformer:latest
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-1:
+    image: sudoblock/icon-transformer:latest
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-2:
+    image: sudoblock/icon-transformer:latest
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-3:
     image: sudoblock/icon-transformer:latest
     environment:
       <<: *transformer-env
