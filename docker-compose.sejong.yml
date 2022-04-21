@@ -100,6 +100,7 @@ x-api-env: &api-env
 services:
   claim-extractor:
     image: sudoblock/icon-extractor:latest
+    restart: always
     ports:
       - "8080:8080"
     deploy:
@@ -117,6 +118,7 @@ services:
 
   head-extractor:
     image: sudoblock/icon-extractor:latest
+    restart: always
     deploy:
       replicas: 1 # NOTE never run more than 1 head extractor
     environment:
@@ -128,30 +130,35 @@ services:
 
   transformer-0:
     image: sudoblock/icon-transformer:latest
+    restart: always
     environment:
       <<: *transformer-env
       ROUTINES_RUN_ONLY: "false"
 
   transformer-1:
     image: sudoblock/icon-transformer:latest
+    restart: always
     environment:
       <<: *transformer-env
       ROUTINES_RUN_ONLY: "false"
 
   transformer-2:
     image: sudoblock/icon-transformer:latest
+    restart: always
     environment:
       <<: *transformer-env
       ROUTINES_RUN_ONLY: "false"
 
   transformer-3:
     image: sudoblock/icon-transformer:latest
+    restart: always
     environment:
       <<: *transformer-env
       ROUTINES_RUN_ONLY: "false"
 
   transformer-routine:
     image: sudoblock/icon-transformer:latest
+    restart: always
     environment:
       <<: *transformer-env
       ROUTINES_RUN_ONLY: "true"
@@ -159,6 +166,7 @@ services:
 
   api:
     image: sudoblock/icon-go-api:latest
+    restart: always
     ports:
       - "8000:8000"
     environment:
