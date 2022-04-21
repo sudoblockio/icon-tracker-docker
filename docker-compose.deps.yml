@@ -116,3 +116,55 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
+
+
+  #############
+  # Exporters #
+  #############
+  postgres-exporter:
+    image: wrouesnel/postgres_exporter:latest
+    depends_on:
+      - postgres
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:${POSTGRES_PASSWORD:-changeme}@postgres:5432/postgres?sslmode=disable
+    ports:
+      - "9187:9187"
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter
+    depends_on:
+      - kafka
+    command:
+      - --kafka.server=kafka:9092
+    ports:
+      - "9308:9308"
+
+  node-exporter:
+    image: bitnami/node-exporter:latest
+    ports:
+      - 9100:9100
+    restart: always
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+
+  cadvisor:
+    image: google/cadvisor:latest
+    privileged: true
+    stdin_open: true
+    container_name: cadvisor
+    ports:
+      - 8081:8080/tcp
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: "--enable_load_reader=true"
