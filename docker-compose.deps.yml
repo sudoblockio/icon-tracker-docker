@@ -123,6 +123,7 @@ services:
   #############
   postgres-exporter:
     image: wrouesnel/postgres_exporter:latest
+    restart: always
     depends_on:
       - postgres
     environment:
@@ -132,6 +133,7 @@ services:
 
   kafka-exporter:
     image: danielqsj/kafka-exporter
+    restart: always
     depends_on:
       - kafka
     command:
@@ -156,6 +158,7 @@ services:
 
   cadvisor:
     image: google/cadvisor:latest
+    restart: always
     privileged: true
     stdin_open: true
     container_name: cadvisor
