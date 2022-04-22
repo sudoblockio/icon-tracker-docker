@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  node:
+    image: 'iconloop/icon2-node'
+    restart: "on-failure"
+    stdin_open: true
+    cap_add:
+      - SYS_TIME
+    volumes:
+      - ./volumes/node/data:/goloop/data
+      - ./volumes/node/logs:/goloop/logs
+      - ./volumes/node/config:/goloop/config
+    environment:
+      SERVICE: ${service:-MainNet}
+      GOLOOP_LOG_LEVEL: "debug"
+      FASTEST_START: "true"
+      ROLE: 0
+      IS_AUTOGEN_CERT: "true"
+#      GOLOOP_P2P_LISTEN: ":9000"
+#      GOLOOP_RPC_ADDR: ":7100"
+    ports:
+     - "9000:9000"
+     - "7100:7100"
