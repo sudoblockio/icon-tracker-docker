@@ -29,6 +29,9 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_ZOOKEEPER_TAG:-latest}
     hostname: zookeeper
+    volumes:
+      - ./volumes/zoo/data:/var/lib/zookeeper/data
+      - ./volumes/zoo/log:/var/lib/zookeeper/log
     environment:
       zk_id: "1"
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -38,8 +41,8 @@ services:
     hostname: kafka
     depends_on:
       - zookeeper
-    ports:
-      - "29092:29092"
+    volumes:
+      - ./volumes/broker/data:/var/lib/kafka/data
     environment:
       KAFKA_BROKER_ID: 0
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
