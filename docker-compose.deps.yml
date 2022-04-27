@@ -41,6 +41,8 @@ services:
     hostname: kafka
     depends_on:
       - zookeeper
+    ports:
+      - "29092:29092"
     volumes:
       - ./volumes/broker/data:/var/lib/kafka/data
     environment:
@@ -94,6 +96,7 @@ services:
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:5.5.1
+    restart: always
     hostname: control-center
     depends_on:
       - zookeeper
@@ -101,7 +104,7 @@ services:
     ports:
       - "9021:9021"
     environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:9092'
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: 'schemaregistry:8081'

@@ -40,6 +40,7 @@ x-transformer-env: &transformer-env
   KAFKA_BROKER_URL: "kafka:9092"
   KAFKA_BLOCKS_TOPIC: "icon-sejong-blocks-v2"
   KAFKA_CONTRACTS_TOPIC: "icon-sejong-contracts-v2"
+  KAFKA_DEAD_MESSAGE_TOPIC: "icon-sejong-blocks-v2-dead"
 
   # Consumer group
   CONSUMER_GROUP: "icon-sejong-v2"
@@ -82,7 +83,7 @@ x-api-env: &api-env
   DB_DRIVER: "postgres"
   DB_HOST: "postgres"
   DB_PORT: "5432"
-  DB_USER: "icon-api"
+  DB_USER: "icon-worker"
   DB_PASSWORD: "testing1."
   DB_DBNAME: "sejong_transformer_v2"
   DB_SSL_MODE: "disable"
