@@ -6,14 +6,18 @@ services:
   ############
   postgres:
     image: postgres
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c 'config_file=/etc/postgresql/postgresql.conf'
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
     ports:
       - "5432:5432"
     volumes:
       - ./volumes/postgres/data:/var/lib/postgresql/data
       - ./volumes/postgres/config:/docker-entrypoint-initdb.d/
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
 
   pgadmin:
     image: dpage/pgadmin4
@@ -66,6 +70,7 @@ services:
       KAFKA_CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CONFLUENT_METRICS_ENABLE: 'true'
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+      KAFKA_MESSAGE_MAX_BYTES: 16777408
 
   schemaregistry:
     image: confluentinc/cp-schema-registry:${CP_SCHEMA_REGISTRY_TAG:-latest}
