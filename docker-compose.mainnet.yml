@@ -21,8 +21,8 @@ x-extractor-env: &extractor-env
   DB_DRIVER: "postgres"
   DB_HOST: "postgres"
   DB_PORT: "5432"
-  DB_USER: "icon-worker"
-  DB_PASSWORD: "testing1."
+  DB_USER: "${DB_USER:-icon}"
+  DB_PASSWORD: "${DB_PASSWORD}"
   DB_DBNAME: "mainnet_extractor_v2"
   DB_SSL_MODE: "disable"
   DB_TIMEZONE: "UTC"
@@ -47,8 +47,8 @@ x-transformer-env: &transformer-env
   DB_DRIVER: "postgres"
   DB_HOST: "postgres"
   DB_PORT: "5432"
-  DB_USER: "icon-worker"
-  DB_PASSWORD: "testing1."
+  DB_USER: "${DB_USER:-icon}"
+  DB_PASSWORD: "${DB_PASSWORD}"
   DB_DBNAME: "mainnet_transformer_v2"
   DB_SSL_MODE: "disable"
   DB_TIMEZONE: "UTC"
@@ -81,8 +81,8 @@ x-api-env: &api-env
   DB_DRIVER: "postgres"
   DB_HOST: "postgres"
   DB_PORT: "5432"
-  DB_USER: "icon-api"
-  DB_PASSWORD: "testing1."
+  DB_USER: "${DB_USER:-icon}"
+  DB_PASSWORD: "${DB_PASSWORD}"
   DB_DBNAME: "mainnet_transformer_v2"
   DB_SSL_MODE: "disable"
   DB_TIMEZONE: "UTC"
@@ -174,34 +174,6 @@ services:
       INSERT_EXTRACTOR_JOB: "false"
       ICON_NODE_SERVICE_MAX_BATCH_SIZE: "1"
 
-  transformer-0:
-    image: sudoblock/icon-transformer:latest
-    restart: always
-    environment:
-      <<: *transformer-env
-      ROUTINES_RUN_ONLY: "false"
-
-  transformer-1:
-    image: sudoblock/icon-transformer:latest
-    restart: always
-    environment:
-      <<: *transformer-env
-      ROUTINES_RUN_ONLY: "false"
-
-  transformer-2:
-    image: sudoblock/icon-transformer:latest
-    restart: always
-    environment:
-      <<: *transformer-env
-      ROUTINES_RUN_ONLY: "false"
-
-  transformer-3:
-    image: sudoblock/icon-transformer:latest
-    restart: always
-    environment:
-      <<: *transformer-env
-      ROUTINES_RUN_ONLY: "false"
-
   transformer-routine:
     image: sudoblock/icon-transformer:latest
     restart: always
@@ -231,3 +203,87 @@ services:
       - "8001:8001"
     environment:
       <<: *contracts-env
+
+  transformer-0:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-1:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-2:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-3:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-4:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-5:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-6:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-7:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-8:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-9:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-10:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
+
+  transformer-11:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      ROUTINES_RUN_ONLY: "false"
