@@ -22,12 +22,12 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./volumes/dynamic/certs-traefik.yaml:/etc/traefik/dynamic/certs-traefik.yaml"
-      - "./volumes/ssl:/etc/certs"
+      - "./ssl:/etc/certs"
 
   api:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rest-api.rule=Host(`tracker.icon.community`) && PathPrefix(`/api/v1`) || PathPrefix(`/ws/v1`)"
+      - "traefik.http.routers.rest-api.rule=Host(`${HOSTNAME}`) && PathPrefix(`/api/v1`) || PathPrefix(`/ws/v1`)"
       - "traefik.http.routers.rest-api.entrypoints=websecure"
       - "traefik.http.routers.rest-api.tls=true"
       - "traefik.webservice.frontend.entryPoints=https,wss,http,ws"
@@ -35,7 +35,7 @@ services:
   contracts-api:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rest-api.rule=Host(`tracker.icon.community`) && PathPrefix(`/api/v1/contracts`)"
+      - "traefik.http.routers.rest-api.rule=Host(`${HOSTNAME}`) && PathPrefix(`/api/v1/contracts`)"
       - "traefik.http.routers.rest-api.entrypoints=websecure"
       - "traefik.http.routers.rest-api.tls=true"
       - "traefik.webservice.frontend.entryPoints=https,wss,http,ws"
