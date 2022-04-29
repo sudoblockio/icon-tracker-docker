@@ -70,7 +70,7 @@ services:
       KAFKA_CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CONFLUENT_METRICS_ENABLE: 'true'
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
-      KAFKA_MESSAGE_MAX_BYTES: 16777408
+      KAFKA_MESSAGE_MAX_BYTES: 67109632
 
   schemaregistry:
     image: confluentinc/cp-schema-registry:${CP_SCHEMA_REGISTRY_TAG:-latest}
