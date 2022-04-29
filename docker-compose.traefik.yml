@@ -24,6 +24,14 @@ services:
       - "./volumes/dynamic/certs-traefik.yaml:/etc/traefik/dynamic/certs-traefik.yaml"
       - "./ssl:/etc/certs"
 
+  frontend:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`${HOSTNAME}`) && PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.webservice.frontend.entryPoints=https,wss,http,ws"
+
   api:
     labels:
       - "traefik.enable=true"
