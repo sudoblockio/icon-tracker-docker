@@ -2,7 +2,7 @@ version: "3.7"
 
 x-extractor-env: &extractor-env
   # API
-  API_PORT: "8080"
+  API_PORT: "9090"
 
   # Logging
   LOG_LEVEL: "INFO"
@@ -148,7 +148,7 @@ services:
     image: sudoblock/icon-extractor:latest
     restart: always
     ports:
-      - "8080:8080"
+      - "9090:9090"
     deploy:
       replicas: 8
     environment:

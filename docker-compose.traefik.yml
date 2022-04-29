@@ -1,0 +1,41 @@
+version: "3.7"
+
+services:
+  #########
+  # Proxy #
+  #########
+  traefik:
+    image: traefik:${TRAEFIK_TAG:-v2.4}
+    container_name: "traefik"
+    hostname: "traefik"
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./volumes/dynamic/certs-traefik.yaml:/etc/traefik/dynamic/certs-traefik.yaml"
+      - "./volumes/ssl:/etc/certs"
+
+  api:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rest-api.rule=Host(`tracker.icon.community`) && PathPrefix(`/api/v1`) || PathPrefix(`/ws/v1`)"
+      - "traefik.http.routers.rest-api.entrypoints=websecure"
+      - "traefik.http.routers.rest-api.tls=true"
+      - "traefik.webservice.frontend.entryPoints=https,wss,http,ws"
+
+  contracts-api:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rest-api.rule=Host(`tracker.icon.community`) && PathPrefix(`/api/v1/contracts`)"
+      - "traefik.http.routers.rest-api.entrypoints=websecure"
+      - "traefik.http.routers.rest-api.tls=true"
+      - "traefik.webservice.frontend.entryPoints=https,wss,http,ws"
