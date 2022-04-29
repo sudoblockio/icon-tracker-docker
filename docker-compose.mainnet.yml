@@ -5,8 +5,7 @@ x-extractor-env: &extractor-env
   API_PORT: "9090"
 
   # Logging
-  LOG_LEVEL: "INFO"
-  LOG_FORMAT: "console"
+  LOG_LEVEL: "INFO" LOG_FORMAT: "console"
 
   # Icon node service
   ICON_NODE_SERVICE_URL: "https://api.icon.geometry.io/api/v3" # Mainnet
@@ -182,6 +181,11 @@ services:
       <<: *transformer-env
       ROUTINES_RUN_ONLY: "true"
       ROUTINES_SLEEP_DURATION: "1h"
+
+  frontend:
+    image: sudoblock/icon-tracker-frontend:latest
+    ports:
+      - "8888:8888"
 
   api:
     image: sudoblock/icon-go-api:latest
