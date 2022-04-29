@@ -35,7 +35,7 @@ services:
   contracts-api:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rest-api.rule=Host(`${HOSTNAME}`) && PathPrefix(`/api/v1/contracts`)"
-      - "traefik.http.routers.rest-api.entrypoints=websecure"
-      - "traefik.http.routers.rest-api.tls=true"
+      - "traefik.http.routers.contracts-api.rule=Host(`${HOSTNAME}`) && PathPrefix(`/api/v1/contracts`)"
+      - "traefik.http.routers.contracts-api.entrypoints=websecure"
+      - "traefik.http.routers.contracts-api.tls=true"
       - "traefik.webservice.frontend.entryPoints=https,wss,http,ws"
