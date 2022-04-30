@@ -10,13 +10,13 @@ pull:
 	docker-compose -f docker-compose.deps.yml -f docker-compose.mainnet.yml -f docker-compose.sejong.yml pull
 
 up-mainnet:  ## Bring up mainnet
-	docker-compose -f docker-compose.deps.yml -f docker-compose.mainnet.yml up -d
+	docker-compose -f docker-compose.deps.yml -f docker-compose.mainnet.yml -f docker-compose.node.yml up -d
 
 up-sejong:  ## Bring up sejong
 	docker-compose -f docker-compose.deps.yml -f docker-compose.sejong.yml up -d
 
 up-mainnet-ssl:  ## Bring up mainnet with traefik
-	docker-compose -f docker-compose.deps.yml -f docker-compose.mainnet.yml -f docker-compose.traefik.yml up -d
+	docker-compose -f docker-compose.deps.yml -f docker-compose.mainnet.yml -f docker-compose.traefik.yml -f docker-compose.node.yml up -d
 
 up-sejong-ssl:  ## Bring up sejong with traefik
 	docker-compose -f docker-compose.deps.yml -f docker-compose.sejong.yml -f docker-compose.traefik.yml up -d
