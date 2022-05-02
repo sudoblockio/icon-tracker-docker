@@ -15,14 +15,22 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
+
+      - "--log.level=DEBUG"
+
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=ovh"
+      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=postmaster@example.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+
     ports:
       - "80:80"
       - "443:443"
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./volumes/dynamic/certs-traefik.yaml:/etc/traefik/dynamic/certs-traefik.yaml"
-      - "./ssl:/etc/certs"
+      - "./certs:/letsencrypt"
 
   frontend:
     labels:
@@ -30,14 +38,6 @@ services:
       - "traefik.http.routers.frontend.rule=Host(`${HOSTNAME}`) && PathPrefix(`/`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
-      - "traefik.webservice.frontend.entryPoints=https,wss,http,ws"
-
-  frontend:
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.rest-api.rule=Host(`tracker.icon.community`) && PathPrefix(`/`)"
-      - "traefik.http.routers.rest-api.entrypoints=websecure"
-      - "traefik.http.routers.rest-api.tls=true"
       - "traefik.webservice.frontend.entryPoints=https,wss,http,ws"
 
   api:

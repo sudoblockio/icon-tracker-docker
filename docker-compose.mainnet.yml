@@ -183,11 +183,6 @@ services:
       ROUTINES_RUN_ONLY: "true"
       ROUTINES_SLEEP_DURATION: "1h"
 
-  frontend:
-    image: sudoblock/icon-tracker-frontend:latest
-    ports:
-      - "8888:8888"
-
   api:
     image: sudoblock/icon-go-api:latest
     restart: always
@@ -293,3 +288,8 @@ services:
     environment:
       <<: *transformer-env
       ROUTINES_RUN_ONLY: "false"
+
+#  frontend:
+#    image: sudoblock/icon-tracker-frontend:latest
+#    ports:
+#      - "8082:8080"
