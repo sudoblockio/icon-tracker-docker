@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  transformer-redis-recovery:
+    image: sudoblock/icon-transformer:latest
+    restart: always
+    environment:
+      <<: *transformer-env
+      REDIS_RECOVERY_RUN_ONLY: "true"
+      FIND_MISSING_EXTRACTOR_API_LOCATION: "http://claim-extractor:9090/api/v1"
+
+#curl -X 'POST' \
+#  'http://claim-extractor:9090/api/v1/create-job' \
+#  -H 'accept: application/json' \
+#  -H 'Content-Type: */*' \
+#  -d '{
+#  "end_block_number": 2,
+#  "start_block_number": 1
+#}'
