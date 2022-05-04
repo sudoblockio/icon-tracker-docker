@@ -36,5 +36,14 @@ postgres-console:  ## Start postgres terminal
 redis-console:  ## Start redis terminal
 	docker-compose -f docker-compose.deps.yml -f docker-compose.mainnet.yml -f docker-compose.sejong.yml exec redis redis-cli
 
+up-full:  ## Bring up mainnet
+	docker-compose -f docker-compose.deps.yml -f docker-compose.backend.yml -f docker-compose.frontend.yml up -d
+
+down-full:  ## Bring up mainnet
+	docker-compose -f docker-compose.deps.yml -f docker-compose.backend.yml -f docker-compose.frontend.yml down
+
+ps-full:  ## Bring up mainnet
+	docker-compose -f docker-compose.deps.yml -f docker-compose.backend.yml -f docker-compose.frontend.yml ps
+
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
