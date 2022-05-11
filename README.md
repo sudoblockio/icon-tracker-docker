@@ -28,7 +28,10 @@ To setup a node to be able to run the application, directory structure and apply
 ```shell
 mkdir volumes 
 # Sym link appropriately if needed 
+# mkdir /data/volumes
 #ln -s /data/volumes volumes
+# mkdir volumes/broker
+# mkdir volumes/zoo
 # Chown for kafka persistence 
 sudo chown 1000:1000 volumes/broker
 sudo chown 1000:1000 volumes/zoo
@@ -80,7 +83,7 @@ It is possible to miss blocks in the backend so to fill them in, there is a proc
 Missing blocks can come from the following general reasons:
 
 1. Misconfigured Kafka topic / broker that has `message.max.bytes` set too low for large blocks
-2. Misformatted blocks such as missing timestamps or empty hashes (they exist) that are dropped in a "dead letter queue" and need to be fixed in some way
+2. Misformatted blocks such as missing timestamps or empty hashes (they exist) that are dropped in a "[dead letter queue](https://medium.com/@sannidhi.s.t/dead-letter-queues-dlqs-in-kafka-afb4b6835309)" and need to be fixed in some way.  Currently there are only a about 5 of such messages so you should not need to worry about this much in normal practice. 
 3. A restart on the transformer as it is processing a message can make it drop the block 
 
 Generally speaking, when a block is processed it is fully processed but a process still exists to make sure the DB is 100% complete. 

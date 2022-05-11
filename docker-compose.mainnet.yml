@@ -130,8 +130,8 @@ x-contracts-env: &contracts-env
   PRODUCER_TOPIC_CONTRACTS: "icon-mainnet-contracts-v2"
 
   # DB
-  POSTGRES_USER: "icon-worker"
-  POSTGRES_PASSWORD: "testing1."
+  POSTGRES_USER: "${DB_USER}"
+  POSTGRES_PASSWORD: "${DB_PASSWORD}"
   POSTGRES_SERVER: "postgres"
   POSTGRES_PORT: "5432"
   POSTGRES_DATABASE: "mainnet_contracts_v2"
@@ -289,7 +289,17 @@ services:
       <<: *transformer-env
       ROUTINES_RUN_ONLY: "false"
 
-#  frontend:
-#    image: sudoblock/icon-tracker-frontend:latest
-#    ports:
-#      - "8082:8080"
+#  transformer-redis-recovery:
+#    image: sudoblock/icon-transformer:latest
+#    restart: always
+#    environment:
+#      <<: *transformer-env
+#      REDIS_RECOVERY_RUN_ONLY: "true"
+#
+#  transformer-missing:
+#    image: sudoblock/icon-transformer:latest
+#    restart: always
+#    environment:
+#      <<: *transformer-env
+#      FIND_MISSING_RUN_ONLY: "true"
+#      FIND_MISSING_EXTRACTOR_API_LOCATION: "http://claim-extractor:9090/api/v1"

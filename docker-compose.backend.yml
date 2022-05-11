@@ -217,12 +217,26 @@ services:
   governance-worker:
     image: sudoblock/icon-governance-worker:latest
     restart: always
+    command:
+      - worker
+      - head
+    environment:
+      <<: *governance-env
+
+  governance-cron:
+    image: sudoblock/icon-governance-worker:latest
+    restart: always
+    command:
+      - worker
+      - cron
     environment:
       <<: *governance-env
 
   governance-api:
     image: sudoblock/icon-governance-api:latest
     restart: always
+    command:
+      - api
     ports:
       - "8002:8002"
     environment:
