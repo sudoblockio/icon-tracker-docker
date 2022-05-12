@@ -13,19 +13,11 @@ services:
       POSTGRES_HOST_AUTH_METHOD: scram-sha-256
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
 #    ports:
-#      - "5432:${POSTGRES_EXTERNAL_PORT:-5432}"
+#      - "${POSTGRES_EXTERNAL_PORT:-5432}:5432"
     volumes:
       - ./volumes/postgres/data:/var/lib/postgresql/data
       - ./volumes/postgres/config:/docker-entrypoint-initdb.d/
       - ./postgresql.conf:/etc/postgresql/postgresql.conf
-
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
 
   #########
   # Kafka #
@@ -45,8 +37,8 @@ services:
     hostname: kafka
     depends_on:
       - zookeeper
-    ports:
-      - "29092:29092"
+#    ports:
+#      - "29092:29092"
     volumes:
       - ./volumes/broker/data:/var/lib/kafka/data
     environment:
@@ -71,54 +63,6 @@ services:
       KAFKA_CONFLUENT_METRICS_ENABLE: 'true'
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
       KAFKA_MESSAGE_MAX_BYTES: 67109632
-
-  schemaregistry:
-    image: confluentinc/cp-schema-registry:${CP_SCHEMA_REGISTRY_TAG:-latest}
-    hostname: schemaregistry
-    depends_on:
-      - zookeeper
-      - kafka
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:9092'
-      SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_ORIGIN: '*'
-      SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_METHODS: 'GET,POST,PUT,OPTIONS'
-      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
-
-  rest-proxy:
-    image: confluentinc/cp-kafka-rest:${CP_KAFKA_REST_TAG:-latest}
-    hostname: rest-proxy
-    depends_on:
-      - kafka
-      - schemaregistry
-    environment:
-      KAFKA_REST_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_REST_BOOTSTRAP_SERVERS: 'kafka:9092'
-      KAFKA_REST_LISTENERS: 'http://0.0.0.0:8084'
-      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schemaregistry:8081'
-      KAFKA_REST_HOST_NAME: 'rest-proxy'
-
-  control-center:
-    image: confluentinc/cp-enterprise-control-center:5.5.1
-    restart: always
-    hostname: control-center
-    depends_on:
-      - zookeeper
-      - kafka
-    ports:
-      - "9021:9021"
-    environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:9092'
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      CONTROL_CENTER_REPLICATION_FACTOR: 1
-      CONTROL_CENTER_SCHEMA_REGISTRY_URL: 'schemaregistry:8081'
-      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
-      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
-      PORT: 9021
-    networks:
-      - default
 
   #########
   # Redis #
