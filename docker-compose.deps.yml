@@ -84,7 +84,7 @@ services:
     environment:
       - DATA_SOURCE_NAME=postgresql://postgres:${POSTGRES_PASSWORD:-changeme}@postgres:5432/postgres?sslmode=disable
     ports:
-      - "9187:9187"
+      - "${POSTGRES_EXPORTER_EXTERNAL_PORT:-9187}:9187"
 
   kafka-exporter:
     image: danielqsj/kafka-exporter
@@ -94,12 +94,12 @@ services:
     command:
       - --kafka.server=kafka:9092
     ports:
-      - "9308:9308"
+      - "${KAFKA_EXPORTER_EXTERNAL_PORT:-9308}:9308"
 
   node-exporter:
     image: bitnami/node-exporter:latest
     ports:
-      - 9100:9100
+      - "${NODE_EXPORTER_EXTERNAL_PORT:-9100}:9100"
     restart: always
     volumes:
       - /proc:/host/proc:ro
@@ -118,7 +118,7 @@ services:
     stdin_open: true
     container_name: cadvisor
     ports:
-      - 8081:8080/tcp
+      - "${NODE_EXPORTER_EXTERNAL_PORT:-8081}:8080/tcp"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
