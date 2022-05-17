@@ -1,6 +1,8 @@
-# icon-tracker-v2
+# icon-tracker-docker
 
 Docker scripts to setup the icon tracker on a single node. 
+
+[tracker.icon.community](https://tracker.icon.community/)
 
 ### Pre-requisites
 
@@ -26,10 +28,11 @@ Additionally, you will need the following installed:
 To setup a node to be able to run the application, directory structure and apply the following permissions:
 
 ```shell
+# If you have a large root volume run 
 mkdir volumes 
-# Sym link appropriately if needed 
+# Or if you have a second volumes -> Sym link  
 # mkdir /data/volumes
-#ln -s /data/volumes volumes
+# ln -s /data/volumes volumes
 # mkdir volumes/broker
 # mkdir volumes/zoo
 # Chown for kafka persistence 
@@ -46,7 +49,9 @@ nano .env
 
 Follow the directions in this file to fill in the fields.
 
-You will also want to configure firewalls appropriately so that you do not expose any of the DBs publicly.  
+### Security and firewalls 
+
+You will also want to configure firewalls appropriately so that you do not expose any of the DBs publicly and if you do, you have a strong password and are ok with the risks. 
 
 If you are running the frontend, expose the following and set a DNS record to point to your host for letsencrypt SSL to be activated. 
 
@@ -63,6 +68,12 @@ If you are monitoring the node, you will want to open the following ports:
 
 > Get in touch if you want to have any prometheus rules / grafana dashboards to monitor the stack. They will be made public in the future.  
 
+If you are running on a single host without an external firewall, be mindful that docker ignores UFW rules and so consider [this repo](https://github.com/chaifeng/ufw-docker) but beware you will also need to allow traffic to internal services such as postgres, redis, and kafka as well.  
+
+### Database Optimization 
+
+For the best performance, it is important that you tune the postgres database per the specs of the node you are running the application on. To do this, go to [https://pgtune.leopard.in.ua/](https://pgtune.leopard.in.ua/), enter your specs, and put the output into a file called `postgresql.conf` in the root of this repo.  The file should be mounted into the PG container and the specs will be reflected in the PG exporter. 
+
 ### Running the application 
 
 After customizing the `.env` file from previous step, simply run the following command:
@@ -74,11 +85,18 @@ make ps-full  # See status of stack
 
 Additionally, you may want to run admin consoles such as pgadmin (postgres) and control-center (kafka). To do that, run the command in the makefile manually with an additional `-f docker-compose.admin.yml`.  Same for an ICON node if you want to run a local version (`-f docker-compose.node.yml`). 
 
-Note that public endpoints should be ok for you to sync off of but if you want something potentially more reliable, the local icon node should be used. 
+Note that public endpoints should be ok for you to sync off of but if you want to run your own sandboxed environment, the local icon node should be used. 
 
-## Filling in Missing Blocks 
+### Recovering Redis 
+
+The API uses redis under the hood to improve query performance for counts. It is possible recover the cache by running `-f docker-compose.redis-recovery.yml`  
+
+
+### Filling in Missing Blocks 
 
 It is possible to miss blocks in the backend so to fill them in, there is a process to discover missing blocks, re-extract them, and process them so that they are properly stored in the backend. 
+
+To run the process, add an additional `-f docker-compose.find-missing.yml` to the makefile command.  A table will be created and internally it will call the extractor service to pull those blocks. 
 
 Missing blocks can come from the following general reasons:
 
@@ -88,3 +106,6 @@ Missing blocks can come from the following general reasons:
 
 Generally speaking, when a block is processed it is fully processed but a process still exists to make sure the DB is 100% complete. 
 
+## Acknowledgments 
+
+Special thanks to the ICON Blockchain's Contribution Proposal System (CPS) for providing the funding needed to execute this project. 
