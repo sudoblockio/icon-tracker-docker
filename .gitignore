@@ -2,4 +2,6 @@
 volumes
 node
 
+.old
+
 sync.sh

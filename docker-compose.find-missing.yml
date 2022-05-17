@@ -1,5 +1,20 @@
 version: "3.7"
 
+x-transformer-env: &transformer-env
+  # Logging
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "console"
+
+  # DB
+  DB_DRIVER: "postgres"
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_USER: "${DB_USER:-icon}"
+  DB_PASSWORD: "${DB_PASSWORD}"
+  DB_DBNAME: "${NETWORK_NAME:-mainnet}_transformer_v2"
+  DB_SSL_MODE: "disable"
+  DB_TIMEZONE: "UTC"
+
 services:
   transformer-missing:
     image: sudoblock/icon-transformer:latest
