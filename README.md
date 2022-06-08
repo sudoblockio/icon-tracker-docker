@@ -1,4 +1,4 @@
-# icon-tracker-docker
+x# icon-tracker-docker
 
 Docker scripts to setup the icon tracker on a single node. 
 
@@ -70,9 +70,19 @@ If you are monitoring the node, you will want to open the following ports:
 
 If you are running on a single host without an external firewall, be mindful that docker ignores UFW rules and so consider [this repo](https://github.com/chaifeng/ufw-docker) but beware you will also need to allow traffic to internal services such as postgres, redis, and kafka as well.  
 
-### Database Optimization 
+### Database Tuning 
 
-For the best performance, it is important that you tune the postgres database per the specs of the node you are running the application on. To do this, go to [https://pgtune.leopard.in.ua/](https://pgtune.leopard.in.ua/), enter your specs, and put the output into a file called `postgresql.conf` in the root of this repo.  The file should be mounted into the PG container and the specs will be reflected in the PG exporter. 
+For the best performance, it is important that you tune the postgres database per the specs of the node you are running the application on. To do this, go to [https://pgtune.leopard.in.ua/](https://pgtune.leopard.in.ua/), enter your specs, and put the output into a file called `postgresql.conf` in the root of this repo.  The file should be mounted into the PG container and the specs will be reflected in the PG exporter.
+
+### Database Index Optimization 
+
+Most of the indexes are created automatically with Gorm (Go) and Alembic (Python) though currently at least one needs to added manually. See [sudoblockio/icon-transformer/issues/31](https://github.com/sudoblockio/icon-transformer/issues/31). 
+
+In transformer DB -> transaction_by_address table 
+```sql
+create index transaction_by_addresses_idx_address_block_number_index
+    on transaction_by_addresses (address asc, block_number desc);
+```
 
 ### Running the application 
 
