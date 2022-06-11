@@ -103,7 +103,7 @@ x-contracts-env: &contracts-env
   NAME: "contracts"
   NETWORK_NAME: "${NETWORK_NAME:-mainnet}"
   # Ports
-  PORT: "8002"
+  PORT: "8001"
   METRICS_PORT: "9401"
   # Prefix
   REST_PREFIX: "/api/v1"
