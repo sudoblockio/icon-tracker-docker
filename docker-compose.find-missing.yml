@@ -22,7 +22,7 @@ services:
     environment:
       <<: *transformer-env
       FIND_MISSING_RUN_ONLY: "true"
-      FIND_MISSING_EXTRACTOR_API_LOCATION: "http://claim-extractor:9090/api/v1"
+      FIND_MISSING_EXTRACTOR_API_LOCATION: "http://claim-extractor:9876/api/v1"
 
 #curl -X 'POST' \
 #  'http://claim-extractor:9090/api/v1/create-job' \

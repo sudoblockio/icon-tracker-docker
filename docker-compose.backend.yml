@@ -115,6 +115,7 @@ x-contracts-env: &contracts-env
   CONSUMER_GROUP: "contracts-consumer-group"
   CONSUMER_TOPIC_BLOCKS: "icon-${NETWORK_NAME:-mainnet}-blocks-v2"
   PRODUCER_TOPIC_CONTRACTS: "icon-${NETWORK_NAME:-mainnet}-contracts-v2"
+  CONSUMER_AUTO_OFFSET_RESET: "earliest"
   # DB
   POSTGRES_USER: "${DB_USER}"
   POSTGRES_PASSWORD: "${DB_PASSWORD}"

@@ -1,4 +1,4 @@
-x# icon-tracker-docker
+# icon-tracker-docker
 
 Docker scripts to setup the icon tracker on a single node. 
 
