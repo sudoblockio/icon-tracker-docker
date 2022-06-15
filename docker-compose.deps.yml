@@ -8,10 +8,15 @@ services:
     image: postgres
     command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c 'config_file=/etc/postgresql/postgresql.conf'
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_HOST_AUTH_METHOD: scram-sha-256
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+      # Used in init scripts
+      ICON_ADMIN_PASSWORD: "${ICON_ADMIN_PASSWORD}"
+      ICON_WORKER_PASSWORD: "${ICON_WORKER_PASSWORD}"
+      ICON_API_PASSWORD: "${ICON_API_PASSWORD}"
+
     ports:
       - "${POSTGRES_EXTERNAL_PORT:-5432}:5432"
     volumes:
