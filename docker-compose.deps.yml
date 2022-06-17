@@ -7,6 +7,9 @@ services:
   postgres:
     image: postgres
     command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c 'config_file=/etc/postgresql/postgresql.conf'
+
+    # This val is still being tuned
+    shm_size: '4gb'
     environment:
       POSTGRES_USER: "${POSTGRES_USER:-postgres}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
